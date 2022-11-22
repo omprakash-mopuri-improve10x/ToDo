@@ -7,13 +7,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TaskListActivity extends AppCompatActivity {
 
     public RecyclerView taskListRv;
-    public ArrayList<Task> tasksList;
+    public ArrayList<Task> tasksList = new ArrayList<>();
     public TaskAdapter taskAdapter;
 
     @Override
@@ -21,33 +27,27 @@ public class TaskListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
         getSupportActionBar().setTitle("Task List");
-        setupData();
         setupTaskListRv();
         handleAddButton();
+        fetchData();
     }
 
-    public void setupData() {
-        tasksList = new ArrayList<>();
+    public void fetchData() {
+        TodoApi todoApi = new TodoApi();
+        TodoService todoService = todoApi.createTodoService();
+        Call<List<Task>> call =  todoService.fetchTask();
+        call.enqueue(new Callback<List<Task>>() {
+            @Override
+            public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
+                List<Task> tasks =  response.body();
+                taskAdapter.setData(tasks);
+            }
 
-        Task task = new Task();
-        task.name = "Get Vegetables";
-        task.description = "for 1 week";
-        tasksList.add(task);
-
-        Task task1 = new Task();
-        task1.name = "Reading news";
-        task1.description = "Explore politics, filmy and sport news";
-        tasksList.add(task1);
-
-        Task task2 = new Task();
-        task2.name = "Prepare Lunch";
-        task2.description = "Biryani and Raitha. yummyyyyy";
-        tasksList.add(task2);
-
-        Task task3 = new Task();
-        task3.name = "Have Breakfast";
-        task3.description = "Healthy breakfast for a better morning";
-        tasksList.add(task3);
+            @Override
+            public void onFailure(Call<List<Task>> call, Throwable t) {
+                Toast.makeText(TaskListActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void setupTaskListRv() {
