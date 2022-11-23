@@ -13,10 +13,15 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
     public List<Task> tasks;
+    public OnItemActionListener onItemActionListener;
 
     public void setData(List<Task> tasksList) {
         tasks = tasksList;
         notifyDataSetChanged();
+    }
+
+    public void setOnItemActionListener(OnItemActionListener actionListener) {
+        onItemActionListener = actionListener;
     }
 
     @NonNull
@@ -32,6 +37,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
         Task task = tasks.get(position);
         holder.taskNameTxt.setText(task.name);
         holder.taskDescriptionTxt.setText(task.description);
+        holder.deleteIb.setOnClickListener(view -> {
+            onItemActionListener.onDelete(task.id);
+        });
     }
 
     @Override

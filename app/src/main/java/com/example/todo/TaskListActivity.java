@@ -55,11 +55,40 @@ public class TaskListActivity extends AppCompatActivity {
         });
     }
 
+    public void deleteTask(String id) {
+        TodoApi todoApi = new TodoApi();
+        TodoService todoService = todoApi.createTodoService();
+        Call<Void> call = todoService.deleteTask(id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(TaskListActivity.this, "Successfully delete the task", Toast.LENGTH_SHORT).show();
+                fetchData();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(TaskListActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void setupTaskListRv() {
         taskListRv = findViewById(R.id.task_list_rv);
         taskListRv.setLayoutManager(new LinearLayoutManager(this));
         taskAdapter = new TaskAdapter();
         taskAdapter.setData(tasksList);
+        taskAdapter.setOnItemActionListener(new OnItemActionListener() {
+            @Override
+            public void onDelete(String id) {
+                deleteTask(id);
+            }
+
+            @Override
+            public void onEdit(Task task) {
+
+            }
+        });
         taskListRv.setAdapter(taskAdapter);
     }
 
