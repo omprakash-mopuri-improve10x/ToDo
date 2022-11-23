@@ -52,4 +52,12 @@
         android:backgroundTint="#2ECADD"
         android:text="Add"
         android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2ECADD"
+        android:text="Update"
+        android:textAllCaps="false" />
 </LinearLayout>

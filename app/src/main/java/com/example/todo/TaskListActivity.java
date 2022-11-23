@@ -55,6 +55,12 @@ public class TaskListActivity extends AppCompatActivity {
         });
     }
 
+    public void editTask(Task task) {
+        Intent intent = new Intent(this, AddTaskActivity.class);
+        intent.putExtra("task", task);
+        startActivity(intent);
+    }
+
     public void deleteTask(String id) {
         TodoApi todoApi = new TodoApi();
         TodoService todoService = todoApi.createTodoService();
@@ -86,7 +92,7 @@ public class TaskListActivity extends AppCompatActivity {
 
             @Override
             public void onEdit(Task task) {
-
+                editTask(task);
             }
         });
         taskListRv.setAdapter(taskAdapter);
