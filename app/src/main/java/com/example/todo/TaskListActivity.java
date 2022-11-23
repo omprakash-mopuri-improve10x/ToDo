@@ -29,6 +29,11 @@ public class TaskListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Task List");
         setupTaskListRv();
         handleAddButton();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchData();
     }
 
